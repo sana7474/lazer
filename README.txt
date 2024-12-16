@@ -27,3 +27,17 @@ $ pip install
 $ pwd
 /home/t/tochkatbr/laserzlat.tochkatbr.beget.tech/public_html/HelloDjango/HelloDjango/tmp
 $ touch restart.txt
+
+!!! ВАЖНО !!!
+laserzlat.tochkatbr.beget.tech адрес сейчас другой
+
+Для локального запуска
+1. Устанавливаем venv в корень проекта: lazer
+2. ./venv/Scripts/activate.ps1 или ./venv/bin/activate (если linux)
+3. pip install -r requirements.txt
+4. Удаляем из папки HelloDjango\shop\migrations все файлы кроме __init__
+5. Удаляем из папки HelloDjango\mypages\migrations все файлы кроме __init__
+6. python .\HelloDjango\manage.py makemigrations
+7. python .\HelloDjango\manage.py migrate
+5. python .\HelloDjango\manage.py runserver
+Файл sqlite таскаем с собой, иначе Welcome page не открывается

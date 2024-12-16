@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<section class="korzina-section">
+    <div class="container">
+        {% if cart %}
+            <h2 class="korzina-title">
+            В корзине {{ cart_total_quantity }} {{ cart_total_quantity|pluralize:"товар,товара,товаров" }}
+        </h2>
+
+
+            <!-- Список товаров в корзине -->
+            {% for product_id, product in cart.items %}
+            <div class="row korzina-tovar-row">
+                <div class="col-md-2 col-12">
+                    <img src="{{ product.image }}" class="korzina-tovar-img" alt="{{ product.name }}">
+                </div>
+                <div class="col-md-5 col-12 d-flex align-items-center">
+                    <span class="korzina-tovars-name">
+                        {{ product.name }}
+                    </span>
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="quantity-control">
+                            <button onclick="updateQuantity('{{ product_id }}', 'decrease')">−</button>
+                            <input type="text" id="quantity-{{ product_id }}" value="{{ product.quantity }}" readonly>
+                            <button onclick="updateQuantity('{{ product_id }}', 'increase')">+</button>
+                        </div>
+
+                        <span class="korzina-tovars-price" id="totalPrice-{{ product_id }}">{{ product.price|floatformat:2 }} р.</span>
+                    </div>
+                </div>
+                <div class="col-md-1 col-9 d-flex justify-content-end align-items-center">
+                    <a href="{% url 'remove_from_cart' product_id=product_id %}">
+                        <svg class="korzina-tovar-close-button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="korzina-tovar-line"></div>
+            </div>
+            {% endfor %}
+
+            <!-- Общая стоимость -->
+            <div class="row">
+                <div class="col-md-7 col-0"></div>
+                <div class="col-md-5 col-12 korzina-custom-col">
+                    <div class="row align-items-center">
+                        <div class="col-6 korzina-total-text text-start">
+                            Итого
+                        </div>
+                    <div class="col-6 korzina-total-price-text  text-end">
+                        {{ cart_total|floatformat:2 }} р.
+                    </div>
+                    </div>
+                    <button type="button" class="btn btn-primary korzina-button">
+                        оформить заказ
+                    </button>
+                </div>
+            </div>
+        {% else %}
+            <p>Ваша корзина пуста.</p>
+        {% endif %}
+    </div>
+</section>
+{% load wagtailcore_tags %}
+
+<section class="best-sellers-section best-sellers-section-cart">
+    <div class="container best-sellers-container">
+        <h2 class="best-sellers-title">с этим товаром покупают</h2>
+        <div class="row best-sellers-row">
+            <div class="owl-carousel">
+                {% for product in products %}
+                    <div class="item">
+                        <!-- Оборачиваем в ссылку на страницу товара -->
+                        <a href="{% pageurl product %}" class="product-link" style="text-decoration: none;">
+                            {% if product.images.first %}
+                                <img src="{{ product.images.first.image.url }}" class="best-sellers-img" alt="{{ product.title }}" />
+                            {% endif %}
+                            <h4 class="mb-4" style="
+                                color: #313131;
+                                font-family: 'Metrika', sans-serif;
+                                font-size: 14px;
+                                font-style: normal;
+                                font-weight: 400;
+                                line-height: 120%;
+                                text-decoration: none;
+                                text-transform: uppercase;
+                            ">
+                                {{ product.title }}
+                            </h4>
+                        </a>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <span class="carousel-price">{{ product.price }} руб.</span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <button type="button" class="btn carousel-button-buy carousel-button-buy-owl">КУПИТЬ</button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Нет акционных товаров.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+function updateQuantity(productId, action) {
+    // Пример обновления количества товара через запрос
+    fetch(`/update_cart/${productId}/${action}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Ошибка обновления корзины');
+        }
+    });
+}
+</script>
+{% endblock %}

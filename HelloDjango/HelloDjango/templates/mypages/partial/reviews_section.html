@@ -1,0 +1,146 @@
+{% load static wagtailimages_tags %}
+<section class="reviews-section">
+    <div class="container reviews-container">
+        <h2 class="reviews-title text-left">Отзывы</h2>
+
+        <style>
+            /* Ваши оригинальные стили */
+            .review-item {
+                height: 245px;
+                max-height: 245px;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 15px;
+                background-color: #fff;
+            }
+
+            .reviews-pfp {
+                width: 104px;
+                height: 104px;
+                border-radius: 50%;
+                background-color: #708759;
+                border: 3px solid #708759;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+            }
+
+            .reviews-pfp img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .reviews-name {
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 100%;
+                color: #708759;
+                margin-top: 10px;
+            }
+
+            .reviews-text {
+                font-size: 12px;
+                line-height: 1.5;
+                color: #333;
+                margin-bottom: 10px;
+                display: -webkit-box;
+                -webkit-line-clamp: 7;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .reviews-stars svg {
+                display: inline-block;
+                margin-right: 2px;
+                vertical-align: middle;
+                width: 13px;
+                height: 13px;
+            }
+        </style>
+
+        <!-- Начало блока отзывов -->
+        <div class="row">
+            {% for review in reviews|slice:"5" %}
+                {% if forloop.counter|add:"-1"|divisibleby:5 and not forloop.first %}
+
+                    <div class="row">
+                {% endif %}
+
+                {% if forloop.counter|divisibleby:5 %}
+                    <div class="col-md-8 col-12 mb-4">
+                {% elif forloop.counter|add:"-1"|divisibleby:5 %}
+                    <div class="col-md-4 col-12 mb-4">
+                {% else %}
+                    <div class="col-md-4 col-12 mb-4">
+                {% endif %}
+
+                    <div class="review-item">
+                        <div class="row align-items-center reviews-right-row">
+                            <div class="col-md-7 col-12">
+                                <div class="reviews-stars">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="#CE8A37">
+                                                <path d="M6.5 0L8.09 4.26L12.5 4.91L9.5 8L10.18 12.5L6.5 10.4L2.82 12.5L3.5 8L0.5 4.91L4.91 4.26L6.5 0Z"/>
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="#E0E0E0">
+                                                <path d="M6.5 0L8.09 4.26L12.5 4.91L9.5 8L10.18 12.5L6.5 10.4L2.82 12.5L3.5 8L0.5 4.91L4.91 4.26L6.5 0Z"/>
+                                            </svg>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <p class="reviews-text">
+                                    {{ review.text }}
+                                </p>
+                                <span class="reviews-name">{{ review.name }}</span>
+                            </div>
+                            <div class="col-md-5 col-12 d-flex justify-content-end">
+                                <div class="reviews-pfp">
+                                    {% if review.photo %}
+                                        {% image review.photo fill-300x300 class="img-fluid" %}
+                                    {% else %}
+                                        <img src="{% static 'img/default-avatar.png' %}" alt="{{ review.name }}" class="img-fluid">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% if reviews|length == 0 %}
+                <p>Отзывов пока нет.</p>
+            {% endif %}
+            <div style="display: flex;justify-content: flex-end;">
+                <div style="
+                cursor: pointer;
+                margin-bottom: calc(1.5rem* 1);
+                color: white;
+                margin-left: calc(1.5rem* 0.5);
+                display: flex;
+                background-color: #708759;
+                width: 260px;
+                height: 34px;
+                align-items: center;
+                justify-content: space-between;
+                padding-inline: 20px;
+            ">
+                Больше отзывов о нас
+                    <div>
+                        <svg width="6" height="9" viewBox="0 0 6 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 8.01039L5 4.50519L1 1" stroke="white" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+            </div>
+            </div>
+        </div>
+        <!-- Конец блока отзывов -->
+
+    </div>
+</section>

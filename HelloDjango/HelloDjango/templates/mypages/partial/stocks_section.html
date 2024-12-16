@@ -1,0 +1,40 @@
+{% load custom_tags %}
+
+<section class="stocks-section">
+    <div class="container">
+        <h2 class="stocks-title">акции</h2>
+    </div>
+    <div class="container stocks-container">
+        <div class="row stocks-row">
+            <div class="col-md-8 col-12">
+                <div class="row stocks-top-row">
+                    <div class="col-12">
+                        <h2>Весь ноябрь<br />Скидка на разделочные доски</h2>
+                    </div>
+                </div>
+                <div class="row stocks-mid-row">
+                    <div class="col-12">
+                        <span class="stocks-text">
+                            Здесь описание акции — например при покупке комплекта из
+                            трех досок скидка 10% <br />
+                            и так далее. Ниже ссылка на товар/раздел
+                        </span>
+                    </div>
+                </div>
+                {% if not submitted %}
+                {% render_stocks_form %}
+                {% else %}
+                <p>Спасибо за ваш запрос! Мы свяжемся с вами в ближайшее время.</p>
+                {% endif %}
+            </div>
+            <div class="col-md-4 col-12">
+                <div class="stocks-wrapper">
+                    <div class="stocks-yellow-square"></div>
+                    <img src="/static/img/stocks-image.png" class="stocks-img" alt="" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

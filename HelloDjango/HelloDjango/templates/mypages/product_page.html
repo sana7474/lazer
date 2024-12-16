@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags %}
+{% block content %}
+<section>
+    <div class="container tovar-description">
+        <div class="row">
+            <div class="col-md-1 col-3 img-gallery-col">
+                <div class="image-gallery d-flex flex-column">
+                    {% if page.video.first %}
+                        <div class="about-us-video-zaglushka" style="height: 80px;">
+                                <video id="videoProductPage" onclick="pauseVideo('modal-video')" onload="loadVideo()"  width="100%" height="100%">
+                                <source src="{{ page.video.first.video.url }}" onloadstart="loadVideo()" type="video/mp4" />
+                                    Ваш браузер не поддерживает видео.
+                                </video>
+                            <div class="play" id="playButton" onclick='playVideo("modal-video")'>
+                                <img src="{{ '/static/img/play.svg' }}" class="play-img" alt="Play" width="49" height="49" />
+                            </div>
+                        </div>
+                        {% for image in page.images.all|slice:":4" %}
+                            <div class="gallery-item" onmouseenter="changeMainImage('{{ image.image.url }}')">
+                                <img src="{{ image.image.url }}" class="tovars-card-mini-img" alt="Изображение {{ page.title }}">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        {% for image in page.images.all|slice:":5" %}
+                            <div class="gallery-item" onmouseenter="changeMainImage('{{ image.image.url }}')">
+                                <img src="{{ image.image.url }}" class="tovars-card-mini-img" alt="Изображение {{ page.title }}">
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-4 col-9">
+            <div
+                    onmousemove="zoomImage(event)"
+                    onmouseleave="resetZoom(event)"
+                    style="
+                        overflow: hidden;
+                        width: 416px;
+                        height: 465px;
+                        position: relative;
+                        ">
+                <img id="main-image" src="{% if page.images.first %}{{ page.images.first.image.url }}{% endif %}"
+                 class="tovars-card-img"
+                 alt="{{ page.title }}"
+                 onclick="openImageModal()">
+            </div>
+            </div>
+            <div class="col-md-7 col-12 d-flex flex-column">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="tovars-card-title">{{ page.title }}</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="tab-content custom-tab-content mt-3" id="productTabContent">
+                        <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                            <p class="tovars-card-text">{{ page.description|safe }}</p>
+                        </div>
+                        <div class="tab-pane fade" id="specifications" role="tabpanel" aria-labelledby="specifications-tab">
+                            <p class="tovars-card-text">{{ page.specifications|safe }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row tovars-card-bottom-row">
+                    <div class="col-12">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 col-12 text-start">
+                                <span class="tovars-card-price">{{ page.price }} Р</span>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex flex-column align-items-start align-items-md-end justify-content-end">
+                                <div class="quantity-control d-flex align-items-center">
+                                    <button onclick="decreaseQuantity()">−</button>
+                                    <input type="text" id="quantity" value="1" readonly>
+                                    <button onclick="increaseQuantity()">+</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-12 d-flex flex-column align-items-end justify-content-end">
+                                <button type="button" class="btn btn-primary tovars-card-button" onclick="addToCart('{{ page.id }}')">В корзину</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="image-modal" class="image-modal">
+        <span class="close-modal" onclick="closeImageModal()">&times;</span>
+        <img class="modal-content" id="modal-image" alt="" src=""/>
+    </div>
+
+    <div id="video-modal" class="image-modal">
+        <div class="download">Загрузка...</div>
+        <span class="close-modal" onclick="closeVideoModal('modal-video')">&times;</span>
+        <video class="modal-content" id="modal-video"
+               onloadeddata="loadVideo()"
+               onloadedmetadata="loadVideo()"
+               onplaying="loadVideo()"
+               onclick="pauseVideo('modal-video')" width="100%" height="100%">
+            <source src="{{ page.video.first.video.url }}" type="video/mp4" />
+            Ваш браузер не поддерживает видео.
+         </video>
+    </div>
+
+</section>
+<script>
+function addToCart(productId) {
+    fetch(`/add_to_cart/${productId}/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Товар добавлен в корзину');
+            } else {
+                alert('Ошибка добавления в корзину');
+            }
+        });
+}
+</script>
+{% include 'mypages/partial/best_seller_section.html' %}
+{% include 'mypages/partial/stocks_section.html' %}
+{% include 'mypages/partial/contacts_section.html' %}
+{% endblock %}

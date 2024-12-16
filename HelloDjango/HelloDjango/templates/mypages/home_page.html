@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+{% include 'mypages/partial/carousel_section.html' %}
+{% include 'mypages/partial/catalog_section.html' %}
+{% include 'mypages/partial/best_seller_section.html' %}
+
+{% include 'mypages/partial/stocks_section.html' %}
+<section class="about-us-section">
+    <div class="container about-us-container">
+        <h2 class="about-us-title">о нас</h2>
+        <div class="row about-us-row">
+            <div class="col-md-5 about-us-video-col">
+                <div class="about-us-video-zaglushka">
+                    <video id="aboutUsVideo" width="100%" height="100%">
+                        <source src="{{ '/static/video/random-video.mp4' }}" type="video/mp4" />
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                    <div class="play" id="playButton">
+                        <img src="{{ '/static/img/play.svg' }}" class="play-img" alt="Play" width="49" height="49" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 my-auto about-us-text-col">
+                <p class="about-us-text">
+                    Наша компания — это не просто производство, а настоящая
+                    мастерская, где каждое изделие<br />становится произведением
+                    искусства. Мы подходим к работе с душой и вниманием, чтобы<br />каждая
+                    деталь отвечала самым высоким стандартам качества.
+                    <br />
+                    <br />
+                    Мы используем только высококачественную древесину ясеня, дарящую
+                    нашим изделиям <br />
+                    прочность и стильный внешний вид. Благодаря собственному
+                    производству мы можем <br />
+                    контролировать каждый этап создания наших изделий и
+                    гарантировать их качество и <br />
+                    экологичность. Мы используем современные технологии УФ-печати и
+                    лазерной гравировки, <br />
+                    чтобы превращать простые вещи в уникальные и долговечные
+                    изделия.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% include 'mypages/partial/reviews_section.html' %}
+{% include 'mypages/partial/contacts_section.html' %}
+
+{% endblock %}
